@@ -11,8 +11,8 @@
     <link rel="stylesheet" type="text/css" href=""/> <!-- 引用外部css样式表 href="路径/URL" -->
     <script src="" type="text/javascript" charset="UTF-8"></script> <!-- 引用外部JavaScript文件 src=目录 不填写目录可在结束与之前嵌入JavaScript代码 -->
     <script> // 嵌入JavaScript代码
-        var baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
-        document.write('<base href="' + baseUrl + '" target="_self">');
+        //var baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+        //document.write('<base href="' + baseUrl + '" target="_self">');
         // 获取当前页面的协议主机名和端口号并将其拼接成基准URL然后通过base设定为基准URL 及将在当前窗口打开连接的方式设为默认/新窗口打开为_blank 
         function clickLink() {
             var linkElement = event.target.querySelector('a');
