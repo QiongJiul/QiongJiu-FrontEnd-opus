@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Untitled document</title> <!-- 标题 -->
+    <meta charset="UTF-8"> <!-- 字符解码方式 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <!-- width=device-width页面宽度为设备宽度 initial-scale=1.0缩放比例为1.0即不进行缩放 maximum-scale=1.0缩放最大为1.0即禁止用户进行缩放 user-scalable=0禁止用户进行缩放 -->
+    <!--<meta http-equiv="refresh" content="">--> <!-- 每隔content=秒刷新一次网页 -->
+    <!--<link rel="shortcut icon" href="" />--> <!-- 设置网站图标 -->
+    <meta name="author" content="QiongJiu"> <!-- 作者 -->
+    <link rel="stylesheet" type="text/css" href=""/> <!-- 引用外部css样式表 href="路径/URL" -->
+    <script src="" type="text/javascript" charset="UTF-8"></script> <!-- 引用外部JavaScript文件 src=目录 不填写目录可在结束与之前嵌入JavaScript代码 -->
+    <script> // 嵌入JavaScript代码
+        var baseUrl = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+        document.write('<base href="' + baseUrl + '" target="_self">');
+        // 获取当前页面的协议主机名和端口号并将其拼接成基准URL然后通过base设定为基准URL 及将在当前窗口打开连接的方式设为默认/新窗口打开为_blank 
+        function clickLink() {
+            var linkElement = event.target.querySelector('a');
+            if (linkElement) {
+              linkElement.click();
+            }
+          }
+    </script>
+    <style> /* 添加css样式 */
+        @font-face {font-family: "SegoePrint"; src: url("fonts/segoepr.ttf");}
+        @font-face {font-family: "SegoePrint_Bold"; src: url("fonts/segoeprb.ttf");}
+        @font-face {font-family: "AWAVEFont"; src: url("fonts/AWAVEFont_Italics-Regular.otf");}
+        * {
+            margin: 0px;
+            padding: 0px;
+            box-sizing: border-box;
+            /*overflow: hidden;*/
+        }
+        :root {
+            --xz: #c7c7c788;
+        }
+        body{
+            /*background-color: #e0ebfc;*/
+            background-image: url(img/background01.png);
+            backdrop-filter: blur(10px);
+            height: 100vh;
+            background-position: center center;
+            background-attachment: fixed;
+        }
+        span.startupdiagram{
+            position: fixed;
+            overflow: hidden;
+            width: 100%;
+            height: 100vh;
+            background-color: #FFFFFF;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeout-startupdiagram 2s ease-out 6.2s;
+            &::before{
+                content: '';
+                position: absolute;
+                width: 65%;
+                aspect-ratio: 1/1;
+                border-radius: 100%;
+                background-color: #71baf2a1;/*星蓝*/
+                top: -30%;
+                left: 65%;
+                filter: blur(300px);
+            }
+            &::after{
+                content: '';
+                position: absolute;
+                width: 65%;
+                aspect-ratio: 1/1;
+                border-radius: 100%;
+                background-color: #eea2a5a1;/*牡丹粉红*/
+                bottom: -30%;
+                right: 65%;
+                filter: blur(300px);
+            }
+        }
+        span.startupdiagram-text{
+            user-select: none;
+            display: inline-block;
+            overflow: hidden;
+            white-space: nowrap;
+            text-align: center;
+            font-family: SegoePrint;
+            font-size: 5vh;
+            word-wrap: break-word;
+        }
+        span.startupdiagram-cursor{
+            line-height: 0;
+            color: #24a2ff;
+            opacity: 0;
+            font-size: 5vh;
+            font-weight: 1;
+            line-height: 1.5;
+            margin-left: 1px;
+            animation: flicker 1s steps(1) infinite;
+        }
+        table {
+            border: 1px dashed rgb(90, 90, 90); /* 设置表格边框 */
+            border-collapse: collapse; /* 相邻单元格的边框合并为单一边框 分开:separate */
+        }
+        th, td, ul, li{
+            /*border: 1px dashed rgb(90, 90, 90); /* 设置单元格边框 */
+            padding: 8px; /* 元素内边距 */
+            text-align: center; /* 设置缺省模式为居中 */
+        } 
+        a {
+            text-decoration: none;
+            color: #000;
+            font-size: 0.78rem;
+            user-select: none;
+        }
+        img{
+            user-select: none;
+        }
+        div.title_bar{
+            box-shadow: 0px 2px 7px #424242;
+        }
+        .title_bar{
+            user-select: none;
+            height: 38px;
+            width: 100%;
+            display: flex;
+            background-color: #fffffff5;
+            margin-bottom: 5px;
+            & > ul {
+                padding: 0px;
+                margin: 0px 10.3%;
+                height: 100%;
+                width: 80%;
+                position: relative;
+                display: flex;
+                & > li {
+                    height: 100%;
+                    list-style-type: none;
+                    z-index: 1;
+                    display: flex;
+                    align-items: center;
+                    padding: 0px 9px;
+                    flex: 0 0 auto;
+                    transition: 0.3s;
+                    &.message{
+                        & div.message{
+                            position: absolute;
+                            top: 38.5px;
+                            transform: translateX(-31%) scaleY(0);
+                            opacity: 0;
+                            transition: 0.25s;
+                        }
+                        &:hover div.message{
+                            transform: translateX(-31%) scaleY(1);
+                            opacity: 1;
+                        }
+                        &:hover .content_animation_bar::before{
+                            opacity: 1;
+                            
+                        }
+                    }
+                    & > a {
+                        & > img {
+                            height: 37px;
+                            width: 100%;
+
+                        }
+                        & > div.avatar {
+                            border-radius: 100%;
+                            height: 29px;
+                            width: 29px;
+                            border: 0.5px solid rgba(170, 170, 170, 0.753);
+                            & > img {
+                                height: 100%;
+                                width: 100%;
+                                border-radius: 100%;
+                            }
+                        }
+                    }
+                }
+                & > li:has(a):hover{
+                    cursor: pointer;
+                  /*background-color: #a1a1a13f;
+                    border-radius: 5px;*/
+                }
+                & > li.elastic_blank{
+                    flex: 1;
+                }
+            }
+        }
+        input.search_bar{
+            position: relative;
+            outline: none;
+            border-top: 0px;
+            border-right: 0px;
+            border-left: 0px;
+            border-bottom: 1px solid #b1b1b1;
+            background-color: transparent;
+            width: 180px;
+            height: 20px;
+            font-size: 11px;
+            margin-top: 2px;
+            z-index: 1;
+            transition: 0.5s .1s;
+            &::placeholder{
+                color: #c0c0c0a9;
+                transition: 0.5s;
+            }
+            &:hover{
+                border-top: 0px;
+                border-right: 0px;
+                border-left: 0px;
+                border-bottom: 1px solid #010101;
+                &::placeholder{
+                    color: #010101;
+                }
+            }
+            &:focus {
+                border-top: 0px;
+                border-right: 0px;
+                border-left: 0px;
+                border-bottom: 1px solid #010101;
+                & ~ #search_bar_touch{
+                    color: #010101;
+                    fill: #3b3b3bce;
+                }
+                &::placeholder{
+                    color: #010101;
+                }
+            }
+        }
+        svg.search_bar_iso{
+            position: absolute;
+            width: 17px;
+            height: 17px;
+            transform: translate(160px);
+            top: 10px;
+            fill: #b1b1b1;
+            transition: 0.5s .1s;
+            cursor: pointer;
+            z-index: 2;
+            &:hover{
+                color: #010101;
+                fill: #3b3b3bce;
+            }
+        }
+        .iso_up_a{
+            display: flex;
+            font-weight: 600;
+            font-size: 0.8rem;
+            align-items: center;
+            & img.iso_up {
+                height: 13px;
+                width: 13px;
+                margin-right: 3px;
+            }
+        }
+        #selech{
+            position: absolute;
+            height: 100%;
+            width: 20px;
+            left: 0px;
+            border-radius: 5px;
+            background-color: #c7c7c788;
+            filter: blur(1px);
+            opacity: 0;
+            transition: 0.25s,
+                opacity 0.4s ease-in-out,
+                filter 0.3s ease-in-out;
+            z-index: 0;
+        }
+        /* 以下为主要页面 */
+        .M-module{
+            /* 所有内部模块样式 */
+            height: 100%;
+            margin: auto;
+            transition: 0.25s;
+        }
+        div.mainpage{
+            width: 100%;
+            & > div.m-capital{
+                height: 172px;
+                & > div.mc-wrapper{
+                    position: relative;
+                    & > div.mcw-information{
+                        position: absolute;
+                        height: 63px;
+                        width: 100%;
+                        margin-top: 109px;
+                        display: flex;
+                        background-image: linear-gradient(to top, #00000069, transparent);
+                        justify-content: space-between;
+                        align-items: end;
+                        & div.mcwi-essage{
+                            height: 100%;
+                            padding-bottom: 10px;
+                            margin-left: 17px;
+                            & div.mcwie-image{
+                                height: 100%;
+                                aspect-ratio: 1/1;
+                                float: left;
+                                display: flex;
+                                justify-content: center;
+                                align-items: center;
+                                position: relative;
+                                & div.mcwiei-frame{
+                                    position: absolute;
+                                    height: 98%;
+                                    border-radius: 100%;
+                                    aspect-ratio: 1/1;
+                                    background-color: #dfdfdf;
+                                    z-index: 0;
+                                }
+                                & img {
+                                    height: 94%;
+                                    border-radius: 100%;
+                                    z-index: 1;
+                                }
+                                & span.mcwiei-iso{
+                                    position: absolute;
+                                    bottom: 0;
+                                    right: 0;
+                                    background-image: url(img/LargeMember_logo.svg);
+                                    z-index: 2;
+                                    width: 17px;
+                                    height: 17px;
+                                }
+                            }
+                            & div.mcwie-text{
+                                float: left;
+                                margin-left: 14px;
+                                height: 45px;
+                                & div.mcwiet-name{
+                                    box-sizing: content-box;
+                                    margin-top: 2px;
+                                    height: 23px;
+                                    width: 100%;
+                                    display: flex;
+                                    align-items: center;
+                                    & div.mcwietn-name{
+                                        position: relative;
+                                        height: 100%;
+                                        width: auto;
+                                        font-size: 16px;
+                                        line-height: 1.5;
+                                        display: flex;
+                                        align-items: center;
+                                        color: #FFFFFF;
+                                        font-weight: 550;
+                                        margin-right: 5px;
+                                    }
+                                    & div.mcwietn-leve{
+                                        height: 22px;
+                                        width: 22px;
+                                        margin-right: 5px;
+                                    }
+                                    & div.mcwietn-member{
+                                        height: 14px;
+                                        width: 34px;
+                                        background-image: url(img/LargeMember_badge.webp);
+                                        background-size: 34px;
+                                    }
+                                }
+                                & input.mcwiet-i{
+                                    margin-top: 3px;
+                                    height: 20px;
+                                    background-color: transparent;
+                                    border: 1px solid transparent;
+                                    border-radius: 6px;
+                                    outline: none;
+                                    transition: 0.25s;
+                                    padding: 0px 2px;
+                                    overflow: hidden;
+                                    &:hover{
+                                        outline: none;
+                                        background-color: rgba(236, 236, 236, 0.356);
+                                        border: 1px solid rgba(255, 255, 255, 0.637);
+                                    }
+                                    &:focus{
+                                        outline: none;
+                                        border: 1px solid rgba(104, 104, 104, 0.37);
+                                        background-color: white;
+                                        box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.315) inset;
+                                        &::placeholder{
+                                            font-size: 10px;
+                                            color: rgb(167, 167, 167);
+                                            line-height: normal;
+                                            transform: translateY(-15%);
+                                        }
+                                    }
+                                    &::placeholder{
+                                        font-size: 10.4px;
+                                        color: white;
+                                        line-height: normal;
+                                        transform: translateY(-14%);
+                                    }
+                                }
+                            }
+                        }
+                        & > div.mcwi-buttons{
+                            position: relative;
+                            height: 38px;
+                            width: 190px;
+                            right: 0px;
+                            bottom: 0;
+                            background-color: transparent;
+                            display: flex;
+                            box-sizing: border-box;
+                            & > div{
+                                width: 68px;
+                                height: 24px;
+                                border-radius: 5px;
+                                position: absolute;
+                                cursor: pointer;
+                                font-size: 0.73rem;
+                                color: white;
+                                font-weight: 550;
+                                line-height: 1.5px;
+                                display: flex;
+                                justify-content: space-around;
+                                align-items: center;
+                                padding: 0px 20px;
+                                transition: 0.16s;
+                            }
+                            & p.mcwib-text{
+                                transition: 0.16s;
+                            }
+                            & > div.mcwib-follow{
+                                outline: 2px solid #ffffff;
+                                background-color: #ff81a1;
+                                &:hover{
+                                    transform: scale(1.135);
+                                    outline: 1px solid #ffffffc4;
+                                    padding: 0px 11px;
+                                    box-shadow: 0px 0px 20px 0px #ff97b1;
+                                    & p.mcwib-text{
+                                        font-size: 0.78rem;
+                                        font-weight: 700;
+                                    }
+                                    & + div{
+                                        animation: movesend 0.3s ease forwards;
+                                    }
+                                }
+                            }
+                            & > div.mcwib-send{
+                                outline: 2px solid #ffffff60;
+                                background-color: #00000062;
+                                left: 84px;
+                                &:hover{
+                                    transform: scale(1.135);
+                                    outline: 1px solid #ffffff8a;
+                                    padding: 0px 13px;
+                                    box-shadow: 0px 0px 20px 0px #c2c2c2;
+                                    & p.mcwib-text{
+                                        font-size: 0.75rem;
+                                        font-weight: 700;
+                                    }
+                                }
+                            }
+                            & > div.mcwib-other{
+                                padding: 0px 0px;
+                                right: 0;
+                                width: 10px;
+                                margin-right: 0px;
+                                float: right;
+                                margin-right: 7px;
+                                padding: 0px;
+                                display: flex;
+                                & ul{
+                                    padding: 0px;
+                                    transform: translateX(13px);
+                                    & li{
+                                        padding: 2.3px 0px;
+                                    }
+                                }
+                                & > div.mcwibo-bar{
+                                    position: absolute;
+                                    top: 38px;
+                                    left: -83.35px;
+                                    width: 100px;
+                                    height: 105px;
+                                    background-color: white;
+                                    border-radius: 7px;
+                                    box-shadow: 0px 0px 5px 0px #4a4a4a;
+                                    transform: scale;
+                                    transform-origin: 50% 0;
+                                    transform: scaleY(0);
+                                    transition: 0.25s;
+                                    & ul {
+                                        width: 100%;
+                                        transform: translateX(0px);
+                                        & li{
+                                            display: flex;
+                                            justify-content: center;
+                                            align-items: center;
+                                            font-weight: 500;
+                                            width: 100%;
+                                            margin: auto;
+                                            & a{
+                                                display: block;
+                                            }
+                                            &:hover{
+                                                transition: 0.16s;
+                                                background-color: var(--xz);
+                                            }
+
+                                        }
+                                    }
+                                }
+                                &:hover div.mcwibo-bar{
+                                    transform: scaleY(1);
+                                }
+                            }
+                            & div.mcwib-other::before{
+                                content: '';
+                                position: absolute;
+                                top: 0;
+                                cursor: auto;
+                                right: -1px;
+                                width: 15px;
+                                height: 37px;
+                                background-color: transparent;
+                            }
+                        }
+                    }
+                    & > div.mcw-image{
+                        overflow: hidden;
+                        height: 100%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        & > img{
+                            width: 100%;
+                            min-width: 1146px;
+                            /*display: none;*/
+                        }
+                    }
+                }
+            }
+            & div.m-option{
+                
+            }
+        }
+
+        /*
+        ul,li {
+            outline: 1px dotted blue;
+        }
+        div{
+            border: 1px dashed #6da6fa;
+        }*/
+
+        /* 一些预设 */
+        .squeeze_follow{animation: movesfront 0.3s ease forwards;}
+        .options_bar{
+            all: unset;
+            cursor: auto;
+            clear: none;
+            position: absolute;
+            display: flex;
+            align-items: center;
+            width: 72px;
+            height: 167px;
+            border-radius: 7px;
+            background-color: white;
+            box-shadow: 0px 0px 5px 0px #4a4a4a;
+            transform-origin: 50% 0;
+            & > ul{
+                list-style-type: none;
+                padding: 0px;
+                width: 60px;
+                margin: auto;
+                & > li{
+                    width: 60px;
+                    height: 30px;
+                    display: flex;
+                    position: relative;
+                    & > a{
+                        cursor: pointer;
+                        box-sizing: border-box;
+                        display: flex;
+                        justify-content: flex-start;
+                        line-height: 1.5;
+                        font-size: 11px;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+        .content_animation_bar::before{
+            content: '';
+            position: absolute;
+            width: calc(100% - 10px);
+            left: 50%;
+            transform: translateX(-50%) translateY(16px) scaleX(0);
+            opacity: 0;
+            height: 2.5px;
+            border-radius: 5px;
+            background-color: #00a7e6;
+            transition: 0.25s;
+        }
+        .content_animation_bar:hover::before{
+            transform: translateX(-50%) translateY(16px) scaleX(1);
+            height: 1.5px;
+            opacity: 1;
+        }
+        #level2{background-image: url(img/Level.svg/Level2.svg);}
+        #level3{background-image: url(img/Level.svg/Level3.svg);}
+        #level4{background-image: url(img/Level.svg/Level4.svg);}
+        #level5{background-image: url(img/Level.svg/Level5.svg);}
+        #level6{background-image: url(img/Level.svg/Level6.svg);}
+        #level6S{background-image: url(img/Level.svg/Level6S.svg); width: 30px;}
+        @media (max-width: 1250.5px){
+            .M-module{
+                width: 900px;
+            }
+            input.mcwiet-i{
+                width: 550px;
+            }
+        }
+        @media (min-width: 1251px){
+            .M-module{
+                width: 1150px;
+            }
+            input.mcwiet-i{
+                width: 700px;
+            }
+        }
+        @keyframes movesend {
+            0% {transform: translateX(0);}
+            30% {transform: translateX(7.5px);}
+            60% {transform: translateX(5px);}
+            80% {transform: translateX(6.5px);}
+            100% {transform: translateX(7px);}
+        }
+        @keyframes movesfront {
+            0% {transform: translateX(0);}
+            30% {transform: translateX(-7.5px);}
+            60% {transform: translateX(-5px);}
+            80% {transform: translateX(-6.5px);}
+            100% {transform: translateX(-7px);}
+        }
+        @keyframes flicker{
+            0%{opacity: 1;}
+            50%{opacity: 0;}
+        }
+        @keyframes fadeout-startupdiagram{
+            100%{
+                opacity: 0;
+            }
+        }
+    </style>
+    </head>
+<body>
+    <span class="startupdiagram">
+        <span class="startupdiagram-text"></span>
+        <span class="startupdiagram-cursor">|</span>
+    </span>
+    <header>
+        <div class="title_bar">
+            <ul class="column">
+                <div id="selech"></div>
+                <li class="elastic_blank" style="padding: 0.1%;"></li>
+                <li onclick="clickLink()"><a href="#"><img src="img/bilibili_logo.png"></a></li>
+                <li onclick="clickLink()"><a href="#">相簿</a></li>
+                <li onclick="clickLink()"><a href="#">番剧</a></li>
+                <li class="elastic_blank" style="padding: 0.5%;"></li>
+                <li class="search_li">
+                    <input class="search_bar" id="search_bar_touch" placeholder="（ ゜- ゜）つロ 干杯~">
+                    <svg class="search_bar_iso" id="search_bar_touch" viewBox="0 0 24 24">
+                        <path class="search_bar_path" d="M9.5,3A6.5,6.5 0 0,1 16,9.5C16,11.11 15.41,12.59 14.44,13.73L14.71,14H15.5L20.5,19L19,20.5L14,15.5V14.71L13.73,14.44C12.59,15.41 11.11,16 9.5,16A6.5,6.5 0 0,1 3,9.5A6.5,6.5 0 0,1 9.5,3M9.5,5C7,5 5,7 5,9.5C5,12 7,14 9.5,14C12,14 14,12 14,9.5C14,7 12,5 9.5,5Z"></path>
+                    </svg>
+                </li>
+                <li class="elastic_blank"></li>
+                <li onclick="clickLink()"><a href="#"><div class="avatar"><img src="img/avatar.png"></div></a></li>
+                <li class="message" onclick="clickLink()">
+                    <a href="#">消息</a>
+                    <div class="message options_bar">
+                        <ul>
+                            <li class="content_bar"><a href="#" class="cb-a content_animation_bar">回复我的</a></li>
+                            <li class="content_bar"><a href="#" class="cb-a content_animation_bar">@我的</a></li>
+                            <li class="content_bar"><a href="#" class="cb-a content_animation_bar">收到的赞</a></li>
+                            <li class="content_bar"><a href="#" class="cb-a content_animation_bar">我的消息</a></li>
+                            <li class="content_bar"><a href="#" class="cb-a content_animation_bar">系统通知</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li onclick="clickLink()"><a href="#">动态</a></li>
+                <li onclick="clickLink()"><a href="#">订阅</a></li>
+                <li onclick="clickLink()"><a href="#">稍后再看</a></li>
+                <li onclick="clickLink()"><a href="#">收藏</a></li>
+                <li onclick="clickLink()"><a href="#">历史</a></li>
+                <li onclick="clickLink()"><a href="#" class="iso_up_a">
+                    <img src="img/iso_up.png" class="iso_up" alt="">投稿
+                </a></li>
+            </ul>
+        </div>
+    </header>
+    <section>
+        <div class="mainpage">
+            <div class="m-capital">
+                <div class="mc-wrapper M-module">
+                    <div class="mcw-information">
+                        <div class="mcwi-essage">
+                            <div class="mcwie-image">
+                                <img src="img/avatar.png" alt="" class="mcwiei-image">
+                                <div class="mcwiei-frame"></div>
+                                <span class="mcwiei-iso"></span>
+                            </div>
+                            <div class="mcwie-text">
+                                <div class="mcwiet-name">
+                                    <div class="mcwietn-name">QiongJiu</div>
+                                    <div class="mcwietn-leve" id="level6"></div>
+                                    <div class="mcwietn-member"></div>
+                                </div>
+                                <input type="text" class="mcwiet-i" placeholder="咕咕咕awa">
+                            </div>
+                        </div>
+                        <div class="mcwi-buttons">
+                            <div class="mcwib-follow">
+                                <p class="mcwib-text">关</p>
+                                <p class="mcwib-text">注</p>
+                            </div>
+                            <div class="mcwib-send">
+                                <p class="mcwib-text">发</p>
+                                <p class="mcwib-text">消</p>
+                                <p class="mcwib-text">息</p>
+                            </div>
+                            <div class="mcwib-other">
+                                <ul>
+                                    <li></li>
+                                    <li></li>
+                                    <li></li>
+                                </ul>
+                                <div class="mcwibo-bar options_bar">
+                                    <ul>
+                                        <li class="content_bar"><a href="#">加入黑名单</a></li>
+                                        <li class="content_bar"><a href="#">悄悄关注</a></li>
+                                        <li class="content_bar"><a href="#">个人信息举报</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mcw-image">
+                        <img src="img/home_headrimage.jpg" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="m-option"></div>
+                <!-- DividingLine DividingLine DividingLine DividingLine DividingLine -->
+                
+            <!-- DividingLine DividingLine DividingLine DividingLine DividingLine -->
+            <div class="m-option_fixed"></div>
+            <div class="m-space">
+                <div class="ms-content"></div>
+                <div class="ms-right"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- DividingLine DividingLine DividingLine DividingLine DividingLine DividingLine-->
+
+    <!-- DividingLine DividingLine DividingLine DividingLine DividingLine DividingLine-->
+
+    <!-- DividingLine DividingLine DividingLine DividingLine DividingLine DividingLine-->
+
+    <script>
+        //选择框
+        let indicator = document.querySelector('#selech')
+        let items = document.querySelectorAll('ul.column li:not(.elastic_blank, .content_animation_bar, .content_bar):not(:has(a.cb-a))')
+        let timeoutId
+        
+        function marker(e) {
+          indicator.style.left = e.offsetLeft + "px"
+          indicator.style.width = e.offsetWidth + "px"
+          indicator.style.height = e.offsetHeight + "px"
+          indicator.style.top = (e.offsetTop - 0) + "px"
+          indicator.style.opacity = 1
+          indicator.style.filter = "blur(0px)";
+        }
+        
+        function resetOpacity() {
+          indicator.style.opacity = 0
+          indicator.style.filter = "blur(30px)";
+        }
+
+        items.forEach(link => {
+            link.addEventListener('mouseover', (e) => {
+                marker(e.target)
+                clearTimeout(timeoutId) // 清除之前的定时器
+            })
+        
+            link.addEventListener('mouseleave', () => {
+                clearTimeout(timeoutId) // 清除之前的定时器
+                timeoutId = setTimeout(resetOpacity, 400) // 一秒后将透明度设置为 0
+            })
+        })
+
+        //搜索框样式
+        let search_li = document.querySelector('.search_li')
+        let search_bar = document.querySelector('.search_bar')
+        let search_bar_iso = document.querySelector('.search_bar_iso')
+        let search_bar_path = document.querySelector('.search_bar_path')
+
+        function search_hover_style(e) {
+            search_bar.style.borderBottom = "1px solid #FFFFFF"
+            search_bar_iso.style.fill = "#FFFFFF"
+        }
+
+        function search_focus_style(e) {
+            search_bar.style.borderBottom = "1px solid #010101"
+            search_bar_iso.style.fill = "#3b3b3bce"
+        }
+
+        function search_likai_style(event) {
+            search_bar.style.borderBottom = "1px solid #b1b1b1"
+            search_bar_iso.style.fill = "#b1b1b1"
+            
+          }
+
+        search_li.addEventListener('mouseover', search_hover_style);
+        search_bar_iso.addEventListener('mouseenter', search_focus_style);
+        search_bar_path.addEventListener('mouseenter', search_focus_style);
+        search_bar.addEventListener('mouseenter', search_focus_style);
+        search_li.addEventListener('mouseleave', search_likai_style);
+        //发消息弹走关注
+        let mcwib_follow = document.querySelector('div.mcwib-follow')
+        let mcwib_send = document.querySelector('div.mcwib-send')
+
+        mcwib_send.addEventListener('mouseenter', function() {
+            mcwib_follow.classList.add('squeeze_follow');
+        });
+        mcwib_send.addEventListener('mouseleave', function() {
+            mcwib_follow.classList.remove('squeeze_follow');
+        });
+        //开始打字动画
+        const textElement = document.querySelector('span.startupdiagram-text');
+        const text = 'QiongJiu\'s Website';
+        let index = 0;
+        let speed = 200;
+        let typeTimer;
+      
+        function type() {
+          textElement.textContent = text.slice(0, index);
+          index++;
+      
+          if (index <= text.length) {
+            typeTimer = setTimeout(type, speed);
+          }
+        }
+      
+        setTimeout(type, 500);
+        //打字光标动画暂停
+        const startupdiagram_text = document.querySelector('span.startupdiagram-cursor');
+
+        function startupdiagram_text_stop() {
+            startupdiagram_text.style.animation = 'none';
+        }
+
+        setTimeout(startupdiagram_text_stop, 5950);
+        //启动页面关闭时动画
+        const element = document.querySelector('span.startupdiagram');
+
+        element.addEventListener('animationend', function() {
+            element.style.display = 'none';
+        });
+
+    </script>
+</body>
+</html>
